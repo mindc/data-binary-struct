@@ -1,0 +1,212 @@
+=encoding utf8
+
+=head1 NAME
+
+C<Data::Binary::Struct> - Simple structs to handle binary data
+
+=head1 SYNOPSIS
+
+ use Data::Binary::Struct;
+
+ # defined struct
+ my $struct = [
+    header => [ # grouping
+        id => 'L',
+        name => 'Z33',
+        unix_timestamp => 'L',
+        _datetime => sub { # custom handle to process decoded data
+            my $data = shift;
+            strftime("%F %T", localtime( $data->{ unix_timestamp } ) );
+        }
+    ],
+
+    # dynamic array
+    count => 'C',
+    'items[count]' => [
+        id => 'L',
+        title => 'Z16',
+        body => 'Z256'
+    ],
+
+
+    # dynamic array with simple types
+    modes_count => 'C',
+    'modes[modes_count]' => 'Z10',
+
+
+    # static array
+    'keys[2]' => [ key => 'C' ],
+
+    # static array with simple types
+    'codes[5]' => 'C'
+
+ ];
+
+ # test data
+
+ my $input = {
+    header => {
+        id => 6753,
+        name => 'Perl',
+        unix_timestamp => 1492292778,
+    },
+    modes_count => 3,
+    modes => [ 'alpha', 'beta', 'gamma' ],
+    codes => [ 1, 2, 3, 5, 8 ],
+    count => 2,
+    items => [
+        { id => 12, title => 'test1', body => 'Some Long Text Some Long Text' },
+        { id => 13, title => 'test2', body => '' },
+    ],
+    keys => [
+        { key => 22 },
+        { key => 33 }
+    ]
+ };
+
+ # encode data to binary using defined struct
+ my $packed = struct_encode( $struct, $input );
+
+ # decode binary data using defined struct
+ my $output = struct_decode( $struct, $packed );
+
+=head1 DESCRIPTION
+
+This module exports two functions L<strcut_encode> and L<struct_decode>.
+Functions using user defined structures to encode or decode binary data.
+
+=head1 DEFINE STRUCT
+
+User structures are just simple arrays with some formating. Structure can handle simple and complex types described below.
+Simple types are just L<CORE::pack> types.
+
+=head2 Simple types
+
+ my $struct = [
+	id => 'L',
+	name => 'Z33',
+	flag => 'C'
+ ];
+
+In L<pack> => 'LZ33C'
+
+=head2 Structures can be nested
+
+ my $struct = [
+	id => 'L',
+	header => [
+		title => 'Z32',
+		timestamp => 'L'
+	]
+ ];
+
+In L<pack> => 'LZ32L'
+
+=head2 Static arrays 
+
+ # simple types
+ my $struct = [
+	'items[2]' => 'C'
+ ];
+
+In L<pack> => '(C)2' or 'CC',
+above struct can be write as
+
+ my $struct = [
+	item1 => 'C',
+	item2 => 'C'
+ ];
+
+Array of chars
+
+ my $struct = [
+	'items[3]' => 'A'
+ ];
+
+In L<pack> => '(A)3',
+above struct can be write as
+
+ my $struct = [
+	item1 => 'A',
+	item2 => 'A',
+	item3 => 'A'
+ ];
+
+It's not the same to write
+
+ my $struct = [
+	items[2] => 'A' # array of two chars
+ ];
+
+and
+
+ my $struct = [
+	items => 'A2' # two chars element
+ ];
+
+More complex arrays
+
+ my $struct = [
+	'items[2]' => [
+		code => 'A3',
+		description => 'Z256'
+	]
+ ];
+
+In L<pack> => 'A3Z256A3Z256' or '(A3Z256)2'
+
+=head2 Dynamic arrays
+
+Number of element in array is present in data
+
+ my $struct = [
+	count => 'C',
+	'items[count]' => 'L'
+ ];
+
+In L<pack> => 'C/L'
+
+ # complex types
+ my $struct = [
+	i => 'C',
+	'items[i]' => [
+		id => 'L',
+		name => 'A32'
+	]
+ ];
+
+In L<pack> => 'C/(LA32)'
+
+It's complicated in L<pack> to write some strcutures if number of elements is not present in front of array. In L<struct> can be placed anywhere before array definition.
+
+ my $struct = [
+	title => 'Z32',
+	elements_count => 'S',
+	flag => 'A',
+	timestamp => 'L',
+	description => 'Z128',
+	'elements[elements_count]' => [
+		id => 'L',
+		type => 'C'
+	]
+ ];
+
+=head2 Custom handles in decode
+
+ use POSIX qw( strftime );
+
+ my $struct = [
+	unix => 'L',
+	datetime => sub {
+		my $data = shift;
+		strftime("%E %T", localtime( $data->{ unix } ) );
+	}
+ ];
+
+Custom handles are ignored during encoding and executed during decoding. If we want to all decoded data be availabale in cutsom handle, place it definition on very end of struct.
+
+=head1 AUTHOR
+
+Paweł Feruś <null@mindc.net>
+
+=cut
