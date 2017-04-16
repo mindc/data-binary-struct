@@ -72,13 +72,13 @@ C<Data::Binary::Struct> - Simple structs to handle binary data
 
 =head1 DESCRIPTION
 
-This module exports two functions I<strcut_encode> and I<struct_decode>.
+This module exports two functions C<strcut_encode> and C<struct_decode>.
 Functions using user defined structures to encode or decode binary data.
 
 =head1 DEFINE STRUCT
 
 User structures are just simple arrays with some formating. Structure can handle simple and complex types described below.
-Simple types are just I<CORE::pack> types.
+Simple types are just C<CORE::pack> types.
 
 =head2 Simple types
 
@@ -88,7 +88,7 @@ Simple types are just I<CORE::pack> types.
 	flag => 'C'
  ];
 
-In I<pack> => 'LZ33C'
+In C<pack> => 'LZ33C'
 
 =head2 Structures can be nested
 
@@ -100,7 +100,7 @@ In I<pack> => 'LZ33C'
 	]
  ];
 
-In I<pack> => 'LZ32L'
+In C<pack> => 'LZ32L'
 
 =head2 Static arrays 
 
@@ -109,7 +109,7 @@ In I<pack> => 'LZ32L'
 	'items[2]' => 'C'
  ];
 
-In I<pack> => '(C)2' or 'CC',
+In C<pack> => '(C)2' or 'CC',
 above struct can be write as
 
  my $struct = [
@@ -123,7 +123,7 @@ Array of chars
 	'items[3]' => 'A'
  ];
 
-In I<pack> => '(A)3',
+In C<pack> => '(A)3',
 above struct can be write as
 
  my $struct = [
@@ -153,7 +153,7 @@ More complex arrays
 	]
  ];
 
-In I<pack> => 'A3Z256A3Z256' or '(A3Z256)2'
+In C<pack> => 'A3Z256A3Z256' or '(A3Z256)2'
 
 =head2 Dynamic arrays
 
@@ -164,7 +164,7 @@ Number of element in array is present in data
 	'items[count]' => 'L'
  ];
 
-In I<pack> => 'C/L'
+In C<pack> => 'C/L'
 
  # complex types
  my $struct = [
@@ -175,9 +175,9 @@ In I<pack> => 'C/L'
 	]
  ];
 
-In I<pack> => 'C/(LA32)'
+In C<pack> => 'C/(LA32)'
 
-It's complicated in I<pack> to write some strcutures if number of elements is not present in front of array. In I<struct> can be placed anywhere before array definition.
+It's complicated in C<pack> to write some strcutures if number of elements is not present in front of array. In C<struct> can be placed anywhere before array definition.
 
  my $struct = [
 	title => 'Z32',
