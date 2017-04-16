@@ -72,7 +72,7 @@ C<Data::Binary::Struct> - Simple structs to handle binary data
 
 =head1 DESCRIPTION
 
-This module exports two functions C<strcut_encode> and C<struct_decode>.
+This module exports two functions C<struct_encode> and C<struct_decode>.
 Functions using user defined structures to encode or decode binary data.
 
 =head1 DEFINE STRUCT
@@ -177,7 +177,7 @@ In C<pack> => 'C/L'
 
 In C<pack> => 'C/(LA32)'
 
-It's complicated in C<pack> to write some strcutures if number of elements is not present in front of array. In C<struct> can be placed anywhere before array definition.
+It's complicated in C<pack> to write some structures if number of elements is not present in front of array. In C<struct> can be placed anywhere before array definition.
 
  my $struct = [
 	title => 'Z32',
