@@ -67,8 +67,55 @@ C<Data::Binary::Struct> - Simple structs to handle binary data
  # encode data to binary using defined struct
  my $packed = struct_encode( $struct, $input );
 
+ # $packed now holds binary data
+
  # decode binary data using defined struct
  my $output = struct_decode( $struct, $packed );
+
+ # output if Data::Dumper( $output )
+
+ $VAR1 = {
+  'header' => {
+    'name' => 'Perl',
+    'id' => 6753,
+    '_datetime' => '2017-04-15 23:46:18',
+    'unix_timestamp' => 1492292778
+  },
+  'modes' => [
+    'alpha',
+    'beta',
+    'gamma'
+  ],
+  'codes' => [
+    1,
+    2,
+    3,
+    5,
+    8
+  ],
+  'keys' => [
+    {
+      'key' => 22
+    },
+    {
+      'key' => 33
+    }
+  ],
+  'count' => 2,
+  'items' => [
+    {
+      'id' => 12,
+      'title' => 'test1',
+      'body' => 'Some Long Text Some Long Text'
+    },
+    {
+      'title' => 'test2',
+      'id' => 13,
+      'body' => ''
+    }
+  ],
+  'modes_count' => 3
+ };
 
 =head1 DESCRIPTION
 
