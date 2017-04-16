@@ -28,18 +28,15 @@ C<Data::Binary::Struct> - Simple structs to handle binary data
         body => 'Z256'
     ],
 
-
     # dynamic array with simple types
     modes_count => 'C',
     'modes[modes_count]' => 'Z10',
-
 
     # static array
     'keys[2]' => [ key => 'C' ],
 
     # static array with simple types
     'codes[5]' => 'C'
-
  ];
 
  # test data
@@ -65,14 +62,12 @@ C<Data::Binary::Struct> - Simple structs to handle binary data
  };
 
  # encode data to binary using defined struct
- my $packed = struct_encode( $struct, $input );
-
- # $packed now holds binary data
+ my $packed = struct_encode( $struct, $input ); # $packed now holds binary data
 
  # decode binary data using defined struct
  my $output = struct_decode( $struct, $packed );
 
- # output if Data::Dumper( $output )
+ # output of Data::Dumper( $output )
 
  $VAR1 = {
   'header' => {
