@@ -23,8 +23,7 @@ sub struct_encode
             if ( $sub_ref =~ m/^(\d+)$/ ) {
                 $count = $1;
             } else {
-                $count = @{ $data->{ $sub_key } || [] };
-                $data->{ $sub_ref } = $count;
+                $count = $data->{ $sub_ref };
             }
 
             if ( ref $value eq 'ARRAY' ) {
